@@ -25,3 +25,5 @@ router.get("/get-all-sales", async (req, res) => {
   const sales = await Sale.find();
   res.json(sales);
 });
+
+module.exports = router;

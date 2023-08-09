@@ -1,23 +1,22 @@
 const express = require("express");
+const app = express();
+app.use(express.json());
+require("dotenv").config();
+const dbConnection = require("./db");
+const port = process.env.PORT || 5000;
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const { body, validationResult } = require("express-validator");
-const port = process.env.PORT || 5000;
 
-const app = express();
-// Middleware
-app.use(express.json());
-app.use(cors());
-app.use(helmet());
-
-const dbConnection = require("./db");
-
+const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const saleRoutes = require("./routes/saleRoutes");
 
+app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/sales", saleRoutes);
+app.use(cors());
+app.use(helmet());
 
 // Rate limiting
 
@@ -26,9 +25,6 @@ const limiter = rateLimit({
   max: 100,
 });
 app.use(limiter);
-
-// Connect to the database
-dbConnection();
 
 // Start the server
 app.listen(port, () =>

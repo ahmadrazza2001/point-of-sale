@@ -25,3 +25,5 @@ router.get("/get-all-products", async (req, res) => {
   const products = await Product.find();
   res.json(products);
 });
+
+module.exports = router;
