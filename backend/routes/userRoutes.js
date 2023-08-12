@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
 });
 
 // get current user
-/*router.get("/get-current-user", authMiddleware, async (req, res) => {
+router.get("/get-current-user", async (req, res) => {
   try {
     const user = await User.findById(req.body.userId);
     res.send({
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
 });
 
 // get all users
-router.get("/get-users", authMiddleware, async (req, res) => {
+router.get("/get-users", async (req, res) => {
   try {
     const users = await User.find();
     res.send({
@@ -105,7 +105,7 @@ router.get("/get-users", authMiddleware, async (req, res) => {
 });
 
 // update user status
-router.put("/update-user-status/:id", authMiddleware, async (req, res) => {
+router.put("/update-user-status/:id", async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.params.id, req.body);
     res.send({
@@ -118,6 +118,6 @@ router.put("/update-user-status/:id", authMiddleware, async (req, res) => {
       message: error.message,
     });
   }
-});*/
+});
 
 module.exports = router;

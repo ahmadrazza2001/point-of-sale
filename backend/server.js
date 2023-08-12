@@ -9,12 +9,16 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
 const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./routes/productRoutes");
-const saleRoutes = require("./routes/saleRoutes");
+//const productRoutes = require("./routes/productRoutes");
+//const saleRoutes = require("./routes/saleRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
+const itemRoutes = require("./routes/itemRoutes");
 
 app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/sales", saleRoutes);
+//app.use("/api/products", productRoutes);
+//app.use("/api/sales", saleRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/items", itemRoutes);
 app.use(cors());
 app.use(helmet());
 
