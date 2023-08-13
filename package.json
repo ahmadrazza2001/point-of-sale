@@ -1,32 +1,28 @@
 {
   "name": "point-of-sale",
+  "type": "module",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "this is description",
+  "main": "server.js",
   "scripts": {
-    "build": "cd backend && npm install  && cd ../frontend && npm install && npm run build",
-    "start": "node backend/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node server.js"
   },
-  "keywords": [],
   "author": "ahmad",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "axios": "^1.4.0",
-    "bcrypt": "^5.1.0",
-    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "color": "^4.2.3",
+    "concurrently": "^7.6.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "express-rate-limit": "^6.9.0",
-    "express-validator": "^7.0.1",
-    "helmet": "^7.0.0",
-    "jsonwebtoken": "^9.0.1",
-    "mongodb": "^5.7.0",
-    "mongoose": "^7.4.2",
-    "nodemon": "^3.0.1",
-    "react-redux": "^8.1.2",
-    "react-router-dom": "^6.15.0",
-    "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "mongoose": "^6.11.5",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
