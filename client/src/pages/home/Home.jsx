@@ -4,10 +4,11 @@ import LayoutApp from "../../components/Layout";
 import { Row, Col } from "antd";
 import Product from "../../components/Product";
 import { useDispatch } from "react-redux";
+import "./home.css";
 
 const Home = () => {
   const dispatch = useDispatch();
-
+  const Lhost = "http://localhost:8080";
   const [productData, setProductData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("burgers");
   const categories = [
@@ -33,7 +34,7 @@ const Home = () => {
         dispatch({
           type: "SHOW_LOADING",
         });
-        const { data } = await axios.get("/api/products/getproducts");
+        const { data } = await axios.get(`${Lhost}/api/products/get-products`);
         setProductData(data);
         dispatch({
           type: "HIDE_LOADING",
@@ -49,12 +50,13 @@ const Home = () => {
 
   return (
     <LayoutApp>
-      <div className="category">
+      <div className="category" style={{ paddingTop: "80px" }}>
         {categories.map((category) => (
           <div
             key={category.name}
-            className={`categoryFlex ${selectedCategory === category.name &&
-              "category-active"}`}
+            className={`categoryFlex ${
+              selectedCategory === category.name && "category-active"
+            }`}
             onClick={() => setSelectedCategory(category.name)}
           >
             <h3 className="categoryName">{category.name}</h3>
@@ -67,19 +69,20 @@ const Home = () => {
           </div>
         ))}
       </div>
-      <Row justify="center">
+      <Row justify="center" style={{ width: "60%", margin: "0 auto" }}>
         {productData
           .filter((i) => i.category === selectedCategory)
           .map((product) => (
             <Col
               xs={24}
-              sm={6}
-              md={6}
-              lg={5}
+              sm={12}
+              md={8}
+              lg={6}
               className="product-col"
               style={{
                 display: "flex",
                 justifyContent: "center",
+                padding: "10px",
               }}
             >
               <Product key={product.id} product={product} />

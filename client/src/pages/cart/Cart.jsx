@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/Layout";
+import "./cart.css";
 import {
   DeleteOutlined,
   PlusCircleOutlined,
@@ -17,6 +18,8 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const Lhost = "http://localhost:8080";
 
   const { cartItems } = useSelector((state) => state.rootReducer);
 
@@ -111,8 +114,11 @@ const Cart = () => {
         ),
         userId: JSON.parse(localStorage.getItem("auth"))._id,
       };
-      await axios.post("/api/bills/addbills", newObject);
+      await axios.post(`${Lhost}/api/bills/add-bills`, newObject);
       message.success("Bill Generated!");
+      dispatch({
+        type: "CLEAR_CART",
+      });
       navigate("/bills");
     } catch (error) {
       message.error("Error!");
@@ -121,58 +127,93 @@ const Cart = () => {
   };
   return (
     <Layout>
-      <h2>Cart</h2>
-      <Table dataSource={cartItems} columns={columns} bordered />
-      <div className="subTotal">
-        <h2>
-          Sub Total: <span>Rs.{subTotal.toFixed(2)}</span>
-        </h2>
-        <Button onClick={() => setBillPopUp(true)} className="add-new">
-          Generate Bill
-        </Button>
+      <div style={{ margin: "0 5%", paddingTop: "2rem" }}>
+        <h2>Cart</h2>
+        <table
+          style={{
+            width: "100%",
+            marginBottom: "2rem",
+            borderCollapse: "collapse",
+          }}
+        >
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column.title}
+                  style={{ borderBottom: "2px solid #000" }}
+                >
+                  {column.title}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {cartItems.map((item, index) => (
+              <tr key={index}>
+                {columns.map((column) => (
+                  <td key={column.title}>
+                    {column.render
+                      ? column.render(item[column.dataIndex], item)
+                      : item[column.dataIndex]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="subTotal">
+          <h2>
+            Sub Total: <span>Rs.{subTotal.toFixed(2)}</span>
+          </h2>
+          <Button onClick={() => setBillPopUp(true)} className="add-new">
+            Generate Bill
+          </Button>
+        </div>
+        <Modal
+          title="Create Invoice"
+          open={billPopUp}
+          onCancel={() => setBillPopUp(false)}
+          footer={false}
+        >
+          <Form layout="vertical" onFinish={handlerSubmit}>
+            <FormItem name="customerName" label="Customer Name">
+              <Input />
+            </FormItem>
+            <FormItem name="customerPhone" label="Customer Phone">
+              <Input />
+            </FormItem>
+            <FormItem name="customerAddress" label="Customer Address">
+              <Input />
+            </FormItem>
+            <Form.Item name="paymentMethod" label="Payment Method">
+              <Select>
+                <Select.Option value="cash">Cash</Select.Option>
+                <Select.Option value="paypal">Easypaisa</Select.Option>
+                <Select.Option value="paypal">Jazzcash</Select.Option>
+                <Select.Option value="Card">Card</Select.Option>
+              </Select>
+            </Form.Item>
+            <div className="total">
+              <span>SubTotal: Rs.{subTotal.toFixed(2)}</span>
+              <br />
+              <span>GST: Rs.{((subTotal / 100) * 8).toFixed(2)}</span>
+              <h3>
+                Total: Rs.
+                {(
+                  Number(subTotal) + Number(((subTotal / 100) * 8).toFixed(2))
+                ).toFixed(2)}
+              </h3>
+            </div>
+            <div className="form-btn-add">
+              <Button htmlType="submit" className="add-new">
+                Generate Bill
+              </Button>
+            </div>
+          </Form>
+        </Modal>
       </div>
-      <Modal
-        title="Create Invoice"
-        visible={billPopUp}
-        onCancel={() => setBillPopUp(false)}
-        footer={false}
-      >
-        <Form layout="vertical" onFinish={handlerSubmit}>
-          <FormItem name="customerName" label="Customer Name">
-            <Input />
-          </FormItem>
-          <FormItem name="customerPhone" label="Customer Phone">
-            <Input />
-          </FormItem>
-          <FormItem name="customerAddress" label="Customer Address">
-            <Input />
-          </FormItem>
-          <Form.Item name="paymentMethod" label="Payment Method">
-            <Select>
-              <Select.Option value="cash">Cash</Select.Option>
-              <Select.Option value="paypal">Easypaisa</Select.Option>
-              <Select.Option value="paypal">Jazzcash</Select.Option>
-              <Select.Option value="Card">Card</Select.Option>
-            </Select>
-          </Form.Item>
-          <div className="total">
-            <span>SubTotal: Rs.{subTotal.toFixed(2)}</span>
-            <br />
-            <span>GST: Rs.{((subTotal / 100) * 8).toFixed(2)}</span>
-            <h3>
-              Total: Rs.
-              {(
-                Number(subTotal) + Number(((subTotal / 100) * 8).toFixed(2))
-              ).toFixed(2)}
-            </h3>
-          </div>
-          <div className="form-btn-add">
-            <Button htmlType="submit" className="add-new">
-              Generate Bill
-            </Button>
-          </div>
-        </Form>
-      </Modal>
     </Layout>
   );
 };

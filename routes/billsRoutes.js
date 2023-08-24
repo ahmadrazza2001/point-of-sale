@@ -1,10 +1,8 @@
-import express from "express";
-import { addBillsController, getBillsController } from "../controllers/billsController.js";
+const express = require("express");
+const router = express.Router();
+const billsRoutes = require("../controllers/billsController");
 
-const billsRouter = express.Router();
+router.route("/add-bills").post(billsRoutes.addBillsController);
+router.route("/get-bills").get(billsRoutes.getBillsController);
 
-billsRouter.post("/addbills", addBillsController);
-
-billsRouter.get("/getbills", getBillsController);
-
-export default billsRouter;
+module.exports = router;

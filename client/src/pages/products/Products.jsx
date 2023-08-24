@@ -8,6 +8,7 @@ import FormItem from "antd/lib/form/FormItem";
 
 const Products = () => {
   const dispatch = useDispatch();
+  const Lhost = "http://localhost:8080";
   const [productData, setProductData] = useState([]);
   const [popModal, setPopModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
@@ -17,12 +18,15 @@ const Products = () => {
       dispatch({
         type: "SHOW_LOADING",
       });
-      const { data } = await axios.get("/api/products/getproducts");
-      setProductData(data);
+      const { data } = await axios.get(`${Lhost}/api/products/get-products`);
+      const sortedProducts = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setProductData(sortedProducts);
       dispatch({
         type: "HIDE_LOADING",
       });
-      console.log(data);
+      console.log(sortedProducts);
     } catch (error) {
       dispatch({
         type: "HIDE_LOADING",
@@ -40,7 +44,7 @@ const Products = () => {
       dispatch({
         type: "SHOW_LOADING",
       });
-      await axios.post("/api/products/deleteproducts", {
+      await axios.post(`${Lhost}/api/products/delete-products`, {
         productId: record._id,
       });
       message.success("Product Deleted Successfully!");
@@ -124,7 +128,10 @@ const Products = () => {
         dispatch({
           type: "SHOW_LOADING",
         });
-        const res = await axios.post("/api/products/addproducts", value);
+        const res = await axios.post(
+          `${Lhost}/api/products/add-products`,
+          value
+        );
         message.success("Product Added Successfully!");
         getAllProducts();
         setPopModal(false);
@@ -143,7 +150,7 @@ const Products = () => {
         dispatch({
           type: "SHOW_LOADING",
         });
-        await axios.put("/api/products/updateproducts", {
+        await axios.put(`${Lhost}/api/products/update-products`, {
           ...value,
           productId: editProduct._id,
         });
@@ -162,54 +169,121 @@ const Products = () => {
       }
     }
   };
+  const styles = {
+    container: {
+      padding: "80px 10%",
+    },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+    },
+    tableHeader: {
+      background: "#f5f5f5",
+      borderBottom: "1px solid #ddd",
+    },
+    tableCell: {
+      padding: "8px",
+      border: "1px solid #ddd",
+      borderBottom: "1px solid #ddd",
+      textAlign: "left",
+    },
+    img: {
+      borderRadius: "5px",
+      height: "60px",
+      width: "60px",
+    },
+  };
 
   return (
     <LayoutApp>
-      <h2>All Items </h2>
-      <Button className="add-new" onClick={() => setPopModal(true)}>
-        Add New
-      </Button>
-      <Table dataSource={productData} columns={columns} bordered />
+      <div style={styles.container}>
+        <h2>All Items </h2>
+        <Button className="add-new" onClick={() => setPopModal(true)}>
+          Add New
+        </Button>
+        <table style={styles.table}>
+          <thead>
+            <tr style={styles.tableHeader}>
+              <th style={styles.tableCell}>Image</th>
+              <th style={styles.tableCell}>Name</th>
+              <th style={styles.tableCell}>Category</th>
+              <th style={styles.tableCell}>Price</th>
+              <th style={styles.tableCell}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {productData.map((record) => (
+              <tr key={record._id}>
+                <td style={styles.tableCell}>
+                  <img
+                    src={record.image}
+                    alt={record.name}
+                    style={styles.img}
+                  />
+                </td>
+                <td style={styles.tableCell}>{record.name}</td>
+                <td style={styles.tableCell}>{record.category}</td>
+                <td style={styles.tableCell}>{record.price}</td>
+                <td style={styles.tableCell}>
+                  <DeleteOutlined
+                    className="cart-action"
+                    onClick={() => handlerDelete(record)}
+                  />
+                  <EditOutlined
+                    className="cart-edit"
+                    onClick={() => {
+                      setEditProduct(record);
+                      setPopModal(true);
+                    }}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      {popModal && (
-        <Modal
-          title={`${editProduct !== null ? "Edit Product" : "Add New Product"}`}
-          visible={popModal}
-          onCancel={() => {
-            setEditProduct(null);
-            setPopModal(false);
-          }}
-          footer={false}
-        >
-          <Form
-            layout="vertical"
-            initialValues={editProduct}
-            onFinish={handlerSubmit}
+        {popModal && (
+          <Modal
+            title={`${
+              editProduct !== null ? "Edit Product" : "Add New Product"
+            }`}
+            open={popModal}
+            onCancel={() => {
+              setEditProduct(null);
+              setPopModal(false);
+            }}
+            footer={false}
           >
-            <FormItem name="name" label="Name">
-              <Input />
-            </FormItem>
-            <Form.Item name="category" label="Category">
-              <Select>
-                <Select.Option value="pizzas">Pizzas</Select.Option>
-                <Select.Option value="burgers">Burgers</Select.Option>
-                <Select.Option value="drinks">Drinks</Select.Option>
-              </Select>
-            </Form.Item>
-            <FormItem name="price" label="Price">
-              <Input />
-            </FormItem>
-            <FormItem name="image" label="Image URL">
-              <Input />
-            </FormItem>
-            <div className="form-btn-add">
-              <Button htmlType="submit" className="add-new">
-                Confirm
-              </Button>
-            </div>
-          </Form>
-        </Modal>
-      )}
+            <Form
+              layout="vertical"
+              initialValues={editProduct}
+              onFinish={handlerSubmit}
+            >
+              <FormItem name="name" label="Name">
+                <Input />
+              </FormItem>
+              <Form.Item name="category" label="Category">
+                <Select>
+                  <Select.Option value="pizzas">Pizzas</Select.Option>
+                  <Select.Option value="burgers">Burgers</Select.Option>
+                  <Select.Option value="drinks">Drinks</Select.Option>
+                </Select>
+              </Form.Item>
+              <FormItem name="price" label="Price">
+                <Input />
+              </FormItem>
+              <FormItem name="image" label="Image URL">
+                <Input />
+              </FormItem>
+              <div className="form-btn-add">
+                <Button htmlType="submit" className="add-new">
+                  Confirm
+                </Button>
+              </div>
+            </Form>
+          </Modal>
+        )}
+      </div>
     </LayoutApp>
   );
 };

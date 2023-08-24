@@ -1,6 +1,5 @@
 {
   "name": "point-of-sale",
-  "type": "module",
   "version": "1.0.0",
   "description": "this is description",
   "main": "server.js",
@@ -13,12 +12,14 @@
   "author": "ahmad",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "color": "^4.2.3",
     "concurrently": "^7.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-validator": "^7.0.1",
     "mongoose": "^6.11.5",
     "morgan": "^1.10.0"
   },
