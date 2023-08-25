@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../../components/Layout";
+import {lHost } from "../../host";
 import "./cart.css";
 import {
   DeleteOutlined,
@@ -18,8 +19,6 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const Lhost = "http://localhost:8080";
 
   const { cartItems } = useSelector((state) => state.rootReducer);
 
@@ -114,7 +113,7 @@ const Cart = () => {
         ),
         userId: JSON.parse(localStorage.getItem("auth"))._id,
       };
-      await axios.post(`${Lhost}/api/bills/add-bills`, newObject);
+      await axios.post(`${lHost}/api/bills/add-bills`, newObject);
       message.success("Bill Generated!");
       dispatch({
         type: "CLEAR_CART",

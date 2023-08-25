@@ -2,12 +2,13 @@
   "name": "point-of-sale",
   "version": "1.0.0",
   "description": "this is description",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "server": "nodemon server.js",
-    "client": "npm start --prefix client",
+
+    "server": "node app.js",
+    "client": "cd client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "author": "ahmad",
   "license": "ISC",

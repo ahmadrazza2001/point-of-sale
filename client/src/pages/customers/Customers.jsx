@@ -2,10 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "../../components/Layout";
+import {lHost } from "../../host";
 
 const Customers = () => {
   const dispatch = useDispatch();
-  const Lhost = "http://localhost:8080";
   const [billsData, setBillsData] = useState([]);
 
   const getAllBills = async () => {
@@ -13,7 +13,7 @@ const Customers = () => {
       dispatch({
         type: "SHOW_LOADING",
       });
-      const { data } = await axios.get(`${Lhost}/api/bills/get-bills`);
+      const { data } = await axios.get(`${lHost}/api/bills/get-bills`);
       const sortedBills = data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );

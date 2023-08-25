@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
+import { lHost } from "../../host";
 
 import axios from "axios";
 
@@ -15,7 +16,7 @@ const Register = () => {
 
       // If your server is running on a different port or domain,
       // provide the full URL. This is an example assuming your server is on port 5000:
-      await axios.post("http://localhost:8080/api/user/signup", values);
+      await axios.post(`${lHost}/api/user/signup`, values);
 
       message.success("Register Successfully!");
       navigate("/login");

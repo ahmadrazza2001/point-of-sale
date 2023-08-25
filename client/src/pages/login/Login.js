@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { lHost } from "../../host";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const Login = () => {
       dispatch({ type: "SHOW_LOADING" });
 
       const { email, password } = values;
-      const res = await axios.post("http://localhost:8080/api/user/login", {
+      const res = await axios.post(`${lHost}/api/user/login`, {
         email,
         password,
       });

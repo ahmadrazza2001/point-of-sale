@@ -4,11 +4,11 @@ import LayoutApp from "../../components/Layout";
 import { Row, Col } from "antd";
 import Product from "../../components/Product";
 import { useDispatch } from "react-redux";
+import {lHost } from "../../host";
 import "./home.css";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const Lhost = "http://localhost:8080";
   const [productData, setProductData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("burgers");
   const categories = [
@@ -34,7 +34,7 @@ const Home = () => {
         dispatch({
           type: "SHOW_LOADING",
         });
-        const { data } = await axios.get(`${Lhost}/api/products/get-products`);
+        const { data } = await axios.get(`${lHost}/api/products/get-products`);
         setProductData(data);
         dispatch({
           type: "HIDE_LOADING",

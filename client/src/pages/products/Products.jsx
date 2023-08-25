@@ -5,10 +5,10 @@ import LayoutApp from "../../components/Layout";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Select, Table, message } from "antd";
 import FormItem from "antd/lib/form/FormItem";
+import { lHost } from "../../host";
 
 const Products = () => {
   const dispatch = useDispatch();
-  const Lhost = "http://localhost:8080";
   const [productData, setProductData] = useState([]);
   const [popModal, setPopModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
@@ -18,7 +18,7 @@ const Products = () => {
       dispatch({
         type: "SHOW_LOADING",
       });
-      const { data } = await axios.get(`${Lhost}/api/products/get-products`);
+      const { data } = await axios.get(`${lHost}/api/products/get-products`);
       const sortedProducts = data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -44,7 +44,7 @@ const Products = () => {
       dispatch({
         type: "SHOW_LOADING",
       });
-      await axios.post(`${Lhost}/api/products/delete-products`, {
+      await axios.post(`${lHost}/api/products/delete-products`, {
         productId: record._id,
       });
       message.success("Product Deleted Successfully!");
@@ -129,7 +129,7 @@ const Products = () => {
           type: "SHOW_LOADING",
         });
         const res = await axios.post(
-          `${Lhost}/api/products/add-products`,
+          `${lHost}/api/products/add-products`,
           value
         );
         message.success("Product Added Successfully!");
@@ -150,7 +150,7 @@ const Products = () => {
         dispatch({
           type: "SHOW_LOADING",
         });
-        await axios.put(`${Lhost}/api/products/update-products`, {
+        await axios.put(`${lHost}/api/products/update-products`, {
           ...value,
           productId: editProduct._id,
         });
